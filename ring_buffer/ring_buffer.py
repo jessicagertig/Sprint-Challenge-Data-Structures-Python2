@@ -4,15 +4,30 @@ from doubly_linked_list import DoublyLinkedList
 class RingBuffer:
     def __init__(self, capacity):
         self.capacity = capacity
-        self.current = None
         self.storage = DoublyLinkedList()
+        self.current = None
 
     def append(self, item):
         if len(self.storage) < self.capacity:
-            self.storage.add_to_tail(item)
+            self.current = self.storage.add_to_tail(item)
+            print(self.storage.tail.value)
+            print(self.current.value)
         elif len(self.storage) == self.capacity:
-            self.storage.remove_from_head()
-            self.storage.add_to_head(item)
+            # self.current = self.storage.add_to_tail(item)
+            # print(self.storage.tail.value)
+            # print(self.current.value)
+            if self.current == self.storage.tail:
+                self.current = self.storage.head
+                self.storage.head.value = item
+            else: 
+                self.current = self.current.next
+                self.current.value = item
+            # self.storage.tail = self.storage.head
+            # self.storage.remove_from_tail()
+            # self.storage.add_to_tail(item)
+            print('Head', self.storage.head.value)
+            print("Head.next", self.storage.head.next.value)
+            print(self.storage.tail.value)
     ##I know I need to connect the tail and head somehow in a way that allows elements the correct elements to be overwritten
 
     def get(self):
@@ -28,19 +43,6 @@ class RingBuffer:
             next_item = next_item.next
 
         return list_buffer_contents
-
-r = RingBuffer(5)
-print(len(r.storage))
-r.append('a')
-r.append('b')
-print(len(r.storage))
-r.append('c')
-r.append('d')
-print(len(r.storage))
-r.append('e')
-print(len(r.storage))
-print(r.get())
-
 
 # ----------------Stretch Goal-------------------
 
